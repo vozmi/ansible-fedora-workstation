@@ -1,0 +1,40 @@
+---
+- name: Install apps & packages
+  become: true
+  block:
+    - name: Install dnf packages
+      ansible.builtin.dnf:
+        name:
+          - git
+          - nodejs
+          - yarnpkg
+          - gnome-tweaks
+          - gnome-extensions
+          - discord
+          - microsoft-edge-stable
+          - code
+          - playonlinux
+        state: present
+
+    - name: Install pnpm
+      community.general.npm:
+        name: pnpm
+        global: true
+
+    - name: Install extension manager
+      community.general.flatpak:
+        name: com.mattjakeman.ExtensionManager
+        remote: flathub
+        state: present
+
+    - name: Install telegram.desktop
+      community.general.flatpak:
+        name: org.telegram.desktop
+        remote: flathub
+        state: present
+
+    - name: Install postman
+      community.general.flatpak:
+        name: com.getpostman.Postman
+        remote: flathub
+        state: present

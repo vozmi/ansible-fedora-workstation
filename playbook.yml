@@ -16,7 +16,7 @@
 
     - name: Install packages
       ansible.builtin.import_tasks:
-        file: tasks/packages.ansible.yml
+        file: tasks/apps.ansible.yml
       tags: packages
 
     - name: Configure git
