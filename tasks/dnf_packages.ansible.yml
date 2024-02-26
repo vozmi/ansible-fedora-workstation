@@ -19,8 +19,7 @@
     - name: Install lt2p VPN module
       ansible.builtin.dnf:
         name:
-          - xl2tpd
-          - NetworkManager-l2tp
+          - strongswan
           - NetworkManager-l2tp-gnome
         state: present
       notify: Restart NetworkManager
