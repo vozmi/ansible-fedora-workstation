@@ -1,9 +1,9 @@
 ---
-install_java: false
-install_docker: false
-install_lt2p_vpn_module: false
-install_telegram: false
-install_vscode: false
-install_edge: false
-install_postman: false
-install_discord: false
+install_java: true
+install_docker: true
+install_lt2p_vpn_module: true
+install_telegram: true
+install_vscode: true
+install_edge: true
+install_postman: true
+install_discord: true

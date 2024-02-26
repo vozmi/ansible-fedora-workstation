@@ -1,7 +1,7 @@
 ---
 - name: Install deps
-  hosts: virtualbox
-  # hosts: local
+  # hosts: virtualbox
+  hosts: localhost
   roles:
     - role: geerlingguy.java
       become: true
