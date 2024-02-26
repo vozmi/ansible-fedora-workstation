@@ -1,0 +1,21 @@
+---
+- name: Enable ssh-agent
+  ansible.builtin.shell: eval $(ssh-agent -s)
+  register: enable_ssh_agent
+  when: '"SSH_AUTH_SOCK" in ansible_env'
+  changed_when: enable_ssh_agent.stdout | regex_search('Agent pid \d+')
+
+- name: Add gitlab.teledirekt.ru to known_hosts
+  ansible.builtin.lineinfile:
+    dest: ~/.ssh/known_hosts
+    create: true
+    state: present
+    line: "{{ lookup('pipe', 'ssh-keyscan -t ssh-ed25519 gitlab.teledirekt.ru') }}"
+    regexp: "^gitlab\\.teledirekt\\.ru"
+    mode: u=rw,g=r,o=r
+
+- name: Ensure leomax-frontend repo is cloned
+  ansible.builtin.git:
+    repo: git@gitlab.teledirekt.ru:new-platform/leomax-frontend.git
+    dest: ~/leomax-frontend
+    version: dev

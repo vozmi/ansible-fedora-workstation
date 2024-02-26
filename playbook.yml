@@ -1,0 +1,25 @@
+---
+- name: Install deps
+  hosts: virtualbox
+  # hosts: local
+  roles:
+    - role: geerlingguy.docker
+      become: true
+    - role: geerlingguy.java
+      become: true
+
+  tasks:
+    - name: Configure repos
+      ansible.builtin.import_tasks:
+        file: tasks/repos.ansible.yml
+      tags: repos
+
+    - name: Install packages
+      ansible.builtin.import_tasks:
+        file: tasks/packages.ansible.yml
+      tags: packages
+
+    - name: Configure git
+      ansible.builtin.import_tasks:
+        file: tasks/git.ansible.yml
+      tags: git
