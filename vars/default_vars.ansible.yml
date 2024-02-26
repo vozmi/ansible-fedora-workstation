@@ -1,0 +1,8 @@
+---
+install_java: false
+install_docker: false
+install_telegram: false
+install_vscode: false
+install_edge: false
+install_postman: false
+install_discord: true

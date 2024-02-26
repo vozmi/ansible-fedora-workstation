@@ -1,0 +1,20 @@
+---
+- name: Install extension manager
+  community.general.flatpak:
+    name: com.mattjakeman.ExtensionManager
+    remote: flathub
+    state: present
+
+- name: Install postman
+  community.general.flatpak:
+    name: com.getpostman.Postman
+    remote: flathub
+    state: present
+  when: install_postman
+
+- name: Install Telegram Desktop
+  community.general.flatpak:
+    name: org.telegram.desktop
+    remote: flathub
+    state: present
+  when: install_telegram

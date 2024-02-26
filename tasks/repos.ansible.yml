@@ -10,7 +10,7 @@
   become: true
   tags: fastest
 
-- name: Enable RPM Fusion repository
+- name: Enable RPM Fusion repository (free)
   ansible.builtin.dnf:
     name: "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm"
     state: present
@@ -18,42 +18,12 @@
     update_cache: true
   become: true
 
-- name: Add Microsoft RPM repository key
-  ansible.builtin.rpm_key:
-    key: https://packages.microsoft.com/keys/microsoft.asc
+- name: Enable RPM Fusion repository (nonfree)
+  ansible.builtin.dnf:
+    name: "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm"
     state: present
-  become: true
-
-- name: Check for edge repo
-  ansible.builtin.stat:
-    path: /etc/yum.repos.d/microsoft-edge.repo
-  register: edge_repo_file
-
-- name: Check for vscode repo
-  ansible.builtin.stat:
-    path: /etc/yum.repos.d/vscode.repo
-  register: vscode_repo_file
-
-- name: Add Visual Studio Code repository
-  ansible.builtin.yum_repository:
-    name: code
-    description: Visual Studio Code
-    file: vscode
-    baseurl: https://packages.microsoft.com/yumrepos/vscode
-    gpgkey: https://packages.microsoft.com/keys/microsoft.asc
-    gpgcheck: true
-  when: not vscode_repo_file.stat.exists
-  become: true
-
-- name: Add Edge repository
-  ansible.builtin.yum_repository:
-    name: microsoft-edge
-    description: Edge
-    file: microsoft-edge
-    baseurl: https://packages.microsoft.com/yumrepos/edge
-    gpgkey: https://packages.microsoft.com/keys/microsoft.asc
-    gpgcheck: true
-  when: not edge_repo_file.stat.exists
+    disable_gpg_check: true
+    update_cache: true
   become: true
 
 - name: Enable flathub
@@ -61,3 +31,48 @@
     name: flathub
     enabled: true
   become: true
+
+- name: Add Microsoft RPM repository key
+  ansible.builtin.rpm_key:
+    key: https://packages.microsoft.com/keys/microsoft.asc
+    state: present
+  become: true
+  when: install_vscode or install_edge
+
+- name: Enable Visual Studio Code repo
+  when: install_vscode
+  block:
+    - name: Check for vscode repo
+      ansible.builtin.stat:
+        path: /etc/yum.repos.d/vscode.repo
+      register: vscode_repo_file
+
+    - name: Add Visual Studio Code repository
+      ansible.builtin.yum_repository:
+        name: code
+        description: Visual Studio Code
+        file: vscode
+        baseurl: https://packages.microsoft.com/yumrepos/vscode
+        gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+        gpgcheck: true
+      when: not vscode_repo_file.stat.exists
+      become: true
+
+- name: Enable Microsoft Edge repo
+  when: install_edge
+  block:
+    - name: Check for edge repo
+      ansible.builtin.stat:
+        path: /etc/yum.repos.d/microsoft-edge.repo
+      register: edge_repo_file
+
+    - name: Add Edge repository
+      ansible.builtin.yum_repository:
+        name: microsoft-edge
+        description: Edge
+        file: microsoft-edge
+        baseurl: https://packages.microsoft.com/yumrepos/edge
+        gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+        gpgcheck: true
+      when: not edge_repo_file.stat.exists
+      become: true

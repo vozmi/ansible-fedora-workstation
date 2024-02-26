@@ -3,10 +3,16 @@
   hosts: virtualbox
   # hosts: local
   roles:
-    - role: geerlingguy.docker
-      become: true
     - role: geerlingguy.java
       become: true
+      when: install_java
+
+    - role: geerlingguy.docker
+      become: true
+      when: install_docker
+
+  vars_files:
+    - vars/default_vars.ansible.yml
 
   tasks:
     - name: Configure repos
@@ -14,10 +20,15 @@
         file: tasks/repos.ansible.yml
       tags: repos
 
-    - name: Install packages
+    - name: Install dnf packages
       ansible.builtin.import_tasks:
-        file: tasks/apps.ansible.yml
-      tags: packages
+        file: tasks/dnf_packages.ansible.yml
+      tags: dnf_packages
+
+    - name: Install flatpak apps
+      ansible.builtin.import_tasks:
+        file: tasks/flatpak_apps.ansible.yml
+      tags: flatpak_apps
 
     - name: Configure git
       ansible.builtin.import_tasks:
