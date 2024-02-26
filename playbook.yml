@@ -34,3 +34,8 @@
       ansible.builtin.import_tasks:
         file: tasks/git.ansible.yml
       tags: git
+
+  handlers:
+    - name: Import handlers
+      ansible.builtin.import_tasks:
+        file: handlers/handlers.ansible.yml

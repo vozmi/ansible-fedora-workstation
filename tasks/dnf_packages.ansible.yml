@@ -9,13 +9,22 @@
           - nodejs
           - yarnpkg
           - gnome-tweaks
-          - gnome-extensions-app
         state: present
 
     - name: Install pnpm
       community.general.npm:
         name: pnpm
         global: true
+
+    - name: Install lt2p VPN module
+      ansible.builtin.dnf:
+        name:
+          - xl2tpd
+          - NetworkManager-l2tp
+          - NetworkManager-l2tp-gnome
+        state: present
+      notify: Restart NetworkManager
+      when: install_lt2p_vpn_module
 
     - name: Install VS Code
       ansible.builtin.dnf:
