@@ -22,7 +22,10 @@
           - strongswan
           - NetworkManager-l2tp-gnome
         state: present
-      notify: Restart NetworkManager
+      notify: 
+        - Remove lt2p from netlink blacklist
+        - Remove lt2p from ppp blacklist
+        - Restart NetworkManager
       when: install_lt2p_vpn_module
 
     - name: Install VS Code

@@ -3,3 +3,21 @@
   ansible.builtin.service:
     name: NetworkManager
     state: restarted
+
+##########
+# Remove lt2p from blacklists
+# https://github.com/xelerance/xl2tpd/issues/188#issuecomment-581417473
+- name: Remove lt2p from netlink blacklist
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/modprobe.d/l2tp_netlink-blacklist.conf
+    regexp: ^blacklist\sl2tp_netlink
+    line: "#blacklist l2tp_netlink"
+
+- name: Remove lt2p from ppp blacklist
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/modprobe.d/l2tp_ppp-blacklist.conf
+    regexp: ^blacklist\sl2tp_ppp
+    line: "#blacklist l2tp_ppp"
+##########
